@@ -1,0 +1,30 @@
+{
+  "name": "flagsfinder",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-game-kit": "0.0.2",
+    "react-scripts": "1.0.13"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "description": "Juego para IAW, simulando el buscaminas PvP del MSN.",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [
+    "reactjs",
+    "react",
+    "game",
+    "socket.io",
+    "websockets",
+    "nodejs"
+  ],
+  "author": "rferromoreno",
+  "license": "MIT"
+}
