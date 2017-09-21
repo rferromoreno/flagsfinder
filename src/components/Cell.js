@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { socketConnect } from 'socket.io-react';
 
 class Cell extends Component {
   constructor() {
@@ -16,6 +17,7 @@ class Cell extends Component {
     if (this.state.dirty) // nothing to do, button already clicked.
       return ;
     
+    this.props.socket.emit('message', 'Hello world!');
     this.setState({dirty: true, value: 'X'});
   }
 
@@ -28,4 +30,4 @@ class Cell extends Component {
   }
 }
 
-export default Cell;
+export default socketConnect(Cell);

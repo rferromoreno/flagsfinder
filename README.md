@@ -3,15 +3,18 @@ Juego para IAW, simulando el buscaminas PvP del MSN.
 ## Tecnologías utilizadas.
 
 - React
-- NodeJS (not yet)
-- Socket.io (not yet)
+- NodeJS
+- Socket.io 
 
 ## Instalación y ejecución
 
 * Instalar las dependencias utilizando `npm install`
 * Levantar la aplicación utilizando `npm start`
+* Levantar el backend usando `node index.js`
 * Abrir el navegador y entrar a `localhost:3000` 
 
+
+# ... (README de Create React App)
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
