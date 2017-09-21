@@ -17,14 +17,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var numUsers = 0;
 
-io.on('connection', function (socket) {
-  var addedUser = false;
 
+
+io.on('connection', function (socket) {
+  console.log(socket.id);
+
+  var addedUser = false;
   // when the client emits 'new message', this listens and executes
   socket.on('message', function (data) {
+    console.log("Llego el mensaje "+JSON.stringify(data));
+    var msg = {
+      row: data.row,
+      column: data.column,
+      value: 'X'
+    }
+    io.sockets.emit('message', msg);
+  });
+
+   // when the client emits 'new message', this listens and executes
+   socket.on('message2', function (data) {
     console.log("Llego el mensaje "+data);
     // we tell the client to execute 'new message'
-    socket.broadcast.emit('message', {
+    socket.broadcast.emit('message2', {
       username: socket.username,
       message: data
     });

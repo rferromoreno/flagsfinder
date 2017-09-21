@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { socketConnect } from 'socket.io-react';
 
 class Cell extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      dirty: false,
-      value: null
+      dirty: false
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -17,14 +16,15 @@ class Cell extends Component {
     if (this.state.dirty) // nothing to do, button already clicked.
       return ;
     
-    this.props.socket.emit('message', 'Hello world!');
-    this.setState({dirty: true, value: 'X'});
+    let { row, column } = this.props;
+    this.props.socket.emit('message', { row, column });
+    this.setState({dirty: true});
   }
 
   render() {
     return (
       <button className="square" onClick={this.handleClick}>
-        {this.state.value}
+        {this.props.value}
       </button>
     )
   }
