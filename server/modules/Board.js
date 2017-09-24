@@ -1,26 +1,53 @@
-var BoardModule = (function () {
+// Constructor function
+var Board = function(size) {
+  this._size = size;
+  this._cells = Array(size).fill(null).map(() => Array(size).fill(null));
+}
 
-  var _board = Array(9).fill('').map(() => Array(9).fill(''));
-  var _flagsCount = 10;
+// Prototype methods.
+Board.prototype.getCell = function(row, column) {
+  return this._cells[row][column];
+}
 
-  var _privateMethod = function () {
-    // private stuff
-    return _board;
-  };
+Board.prototype.setCell = function(row, column, value) {
+  this._cells[row][column] = value;
+}
 
-  var publicMethod = function () {
-    _privateMethod();
-  };
+Board.prototype.showBoard = function() {
+  this._cells.forEach((row) => {
+    let rowString = "";
+    row.forEach((cell) => {
+      rowString += cell + " ";
+    })
+    console.log(rowString);
+  });
+}
 
-  var _shuffle = function() {
-    // inicializar el array con flags en posiciones random.
-    // rellenar el array en el resto de las posiciones de acuerdo a sus adyacentes.
+Board.prototype.getSize = function() {
+  return this._size;
+}
+
+Board.prototype.getAdjacentFlagsCount = function(row, column) {
+  let count = 0;
+  count += this.isCellAFlag(row - 1, column - 1);
+  count += this.isCellAFlag(row + 1, column - 1);
+  count += this.isCellAFlag(row - 1, column + 1);
+  count += this.isCellAFlag(row + 1, column + 1);
+  count += this.isCellAFlag(row - 1, column);
+  count += this.isCellAFlag(row + 1, column);
+  count += this.isCellAFlag(row, column + 1);
+  count += this.isCellAFlag(row, column - 1);
+  return count;
+}
+
+Board.prototype.isCellAFlag = function(row, column) {
+  let size = this._size;
+  if (row < 0 || column < 0 || row >= size || column >= size) {
+    return 0;
+  } else {
+    return this._cells[row][column] === 'F' ? 1 : 0;
   }
 
-  return {
-    publicMethod: publicMethod
-  };
+}
 
-})();
-
-module.exports = BoardModule;
+module.exports = Board;
