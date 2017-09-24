@@ -16,9 +16,21 @@ class Cell extends Component {
     if (this.state.dirty) // nothing to do, button already clicked.
       return ;
     
-    let { row, column } = this.props;
-    this.props.socket.emit('message', { row, column });
-    this.setState({dirty: true});
+    this.setState({dirty: true}, () => {
+      let { row, column } = this.props;
+      this.props.socket.emit('message', { row, column });
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.props.value) {
+      this.setState({dirty: true});
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // Only re-render when the value changed. Not when turn changes
+    return nextProps.value !== this.props.value;
   }
 
   render() {

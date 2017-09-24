@@ -16,6 +16,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Chatroom
 var numUsers = 0;
 
+var Game = require('./server/modules/Game');
+var gameMatch = new Game();
+gameMatch._shuffle();
+
 io.on('connection', function (socket) {
   console.log(socket.id);
 
@@ -23,10 +27,12 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('message', function (data) {
     console.log("Llego el mensaje "+JSON.stringify(data));
+
+    let value = gameMatch.makeMove(data.row, data.column);
     var msg = {
       row: data.row,
       column: data.column,
-      value: 'X'
+      value: value
     }
     io.sockets.emit('message', msg);
   });

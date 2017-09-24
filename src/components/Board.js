@@ -24,7 +24,11 @@ class Board extends Component {
   }
 
   getCell = (row, column) => {
-      return (<Cell key={column} row={row} column={column} value={this.state.cells[row][column]} />);
+      return (<Cell key={column}
+                    row={row} 
+                    column={column} 
+                    value={this.state.cells[row][column]} 
+              />);
   }
 
   render() {

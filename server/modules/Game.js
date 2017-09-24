@@ -4,6 +4,7 @@ let Misc = require('../utils/Misc');
 // Constructor function
 let Game = function() {
   this._board = new Board(9);
+  this._playerOneTurn = true;
 }
 
 // Prototype methods.
@@ -12,27 +13,47 @@ Game.prototype._shuffle = function() {
   let boardSize = board.getSize();
   let flagsNumber = 10;
   // Load the board with flags in random positions.
+  let randomRow, randomColumn;
   while (flagsNumber > 0) {
-    let randomRow = Misc.getRandomInt(boardSize);
-    let randomColumn = Misc.getRandomInt(boardSize);
+    randomRow = Misc.getRandomInt(boardSize);
+    randomColumn = Misc.getRandomInt(boardSize);
     if (board.getCell(randomRow, randomColumn) == null) {
       board.setCell(randomRow, randomColumn, 'F');
       flagsNumber--;
     }
   }
   // Load the right numbers in the rest of the cells.
+  let adjacentFlags;
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       if (board.getCell(row, col) !== 'F') {
-        let adjacentFlags = board.getAdjacentFlagsCount(row, col);
+        adjacentFlags = board.getAdjacentFlagsCount(row, col);
         board.setCell(row, col, adjacentFlags);
       }
     }
   }
 }
 
+Game.prototype.makeMove = function(row, column) {
+  // TODO: Implement...
+  let cellValue = this._board.getCell(row, column);
+  if (cellValue !== 'F') {
+    this._playerOneTurn = !this._playerOneTurn;
+  }
+  return cellValue;
+}
+
+Game.prototype.isPlayerOneTurn = function() {
+  return this._playerOneTurn;
+}
+
 Game.prototype.showBoard = function() {
   this._board.showBoard();
+}
+
+Game.prototype.hasGameEnded = function() {
+  // TODO: Implement...
+  return false;
 }
 
 
