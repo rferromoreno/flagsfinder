@@ -2,16 +2,19 @@ let Board = require('./Board');
 let Misc = require('../utils/Misc');
 
 // Constructor function
-let Game = function() {
-  this._board = new Board(9);
+let Game = function(numberOfFlags, boardSize) {
+  this._board = new Board(boardSize);
   this._playerOneTurn = true;
+  this._flagsInMap = numberOfFlags;
+  this._playerOneScore = 0;
+  this._playerTwoScore = 0;
 }
 
 // Prototype methods.
 Game.prototype._shuffle = function() {
   let board = this._board;
   let boardSize = board.getSize();
-  let flagsNumber = 10;
+  let flagsNumber = this._flagsInMap;
   // Load the board with flags in random positions.
   let randomRow, randomColumn;
   while (flagsNumber > 0) {
@@ -37,8 +40,14 @@ Game.prototype._shuffle = function() {
 Game.prototype.makeMove = function(row, column) {
   // TODO: Implement...
   let cellValue = this._board.getCell(row, column);
-  if (cellValue !== 'F') {
-    this._playerOneTurn = !this._playerOneTurn;
+  if (cellValue !== 'F') {  // flag not found, change turn
+    this._playerOneTurn = !this._playerOneTurn; 
+  } else {                  // flag found, update the score
+    if (this._playerOneTurn) {
+      this._playerOneScore++
+    } else {
+      this._playerTwoScore++
+    }
   }
   return cellValue;
 }
@@ -52,8 +61,8 @@ Game.prototype.showBoard = function() {
 }
 
 Game.prototype.hasGameEnded = function() {
-  // TODO: Implement...
-  return false;
+  let flagsToWin = Misc.div(this._flagsInMap,2)+1;
+  return (this._playerOneScore >= flagsToWin || this._playerTwoScore >= flagsToWin);
 }
 
 

@@ -37,8 +37,23 @@ class Cell extends Component {
   }
 
   render() {
+    let classColor;
+    switch (this.props.value) {
+      case 0: classColor = '#FFFFFF'; break;
+      case 1: classColor = '#2061c9'; break;
+      case 2: classColor = '#0d9335'; break;
+      case 3: classColor = '#d11212'; break;
+      case 4: classColor = '#7594a8'; break;
+      case 5: classColor = '#9b9b0a'; break;
+      case 6: classColor = '#c47f11'; break;
+      case 7: classColor = '#a00893'; break;
+      case 8: classColor = '#34c1b1'; break;
+      default: classColor = '#000000';
+    }
+
+
     return (
-      <button className="square" onClick={this.handleClick}>
+      <button className="square" style={{color: classColor}} onClick={this.handleClick}>
         {this.props.value}
       </button>
     )

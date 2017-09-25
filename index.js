@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var numUsers = 0;
 
 var Game = require('./server/modules/Game');
-var gameMatch = new Game();
+var gameMatch = new Game(11,9);
 gameMatch._shuffle();
 
 let playerOne, playerTwo;
