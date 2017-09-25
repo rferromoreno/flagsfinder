@@ -20,19 +20,35 @@ var Game = require('./server/modules/Game');
 var gameMatch = new Game();
 gameMatch._shuffle();
 
+let playerOne, playerTwo;
+
 io.on('connection', function (socket) {
   console.log(socket.id);
+  if (numUsers === 0) {
+    playerOne = socket.id;
+  } else if (numUsers === 1) {
+    playerTwo = socket.id;
+  }
+  numUsers++;
 
-  var addedUser = false;
+  // Initial message, so both know that it is Player One's turn.
+  socket.emit('message', {
+    row: 0,
+    column: 0,
+    value: '',
+    turn: playerOne
+  });
+
   // when the client emits 'new message', this listens and executes
   socket.on('message', function (data) {
     console.log("Llego el mensaje "+JSON.stringify(data));
 
     let value = gameMatch.makeMove(data.row, data.column);
-    var msg = {
+    let msg = {
       row: data.row,
       column: data.column,
-      value: value
+      value: value,
+      turn: gameMatch.isPlayerOneTurn() ? playerOne : playerTwo
     }
     io.sockets.emit('message', msg);
   });
@@ -49,14 +65,12 @@ io.on('connection', function (socket) {
 
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {
-    if (addedUser) {
-      --numUsers;
+      numUsers--;
 
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
         username: socket.username,
         numUsers: numUsers
       });
-    }
   });
 });

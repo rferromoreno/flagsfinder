@@ -13,8 +13,11 @@ class Cell extends Component {
   handleClick(e) {
     e.preventDefault();
 
-    if (this.state.dirty) // nothing to do, button already clicked.
-      return ;
+    if (this.props.turn !== this.props.socket.id)
+      return ;  // not your turn, sorry.
+
+    if (this.state.dirty) 
+      return ;  // nothing to do, button already clicked.
     
     this.setState({dirty: true}, () => {
       let { row, column } = this.props;

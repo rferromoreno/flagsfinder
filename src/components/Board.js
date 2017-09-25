@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Cell from './Cell';
+import Status from './Status';
 import { socketConnect } from 'socket.io-react';
 
 class Board extends Component {
@@ -7,7 +8,8 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cells: Array(9).fill('').map(()=>Array(9).fill(''))
+      cells: Array(9).fill('').map(()=>Array(9).fill('')),
+      turn: false
     };
     this.props.socket.on('message', (payload) => {
       console.log("Recibiendo mensaje "+JSON.stringify(payload));
@@ -16,10 +18,10 @@ class Board extends Component {
   }
 
   updateCellInformation = (payload) => {
-    console.log("Entrando");
-    let { row, column, value } = payload;
+    let { row, column, value, turn } = payload;
     let newState = this.state;
     newState.cells[row][column] = value;
+    newState.turn = turn;
     this.setState(newState);
   }
 
@@ -28,6 +30,7 @@ class Board extends Component {
                     row={row} 
                     column={column} 
                     value={this.state.cells[row][column]} 
+                    turn={this.state.turn}
               />);
   }
 
@@ -41,6 +44,7 @@ class Board extends Component {
 
     return (
       <div>
+        <Status turn={this.state.turn} />
         { cellsArray }
       </div>
     )
