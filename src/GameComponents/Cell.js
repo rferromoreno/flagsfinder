@@ -39,7 +39,7 @@ class Cell extends Component {
   render() {
     let classColor;
     switch (this.props.value) {
-      case 0: classColor = '#FFFFFF'; break;
+      case 0: classColor = '#AAAAAA'; break;
       case 1: classColor = '#2061c9'; break;
       case 2: classColor = '#0d9335'; break;
       case 3: classColor = '#d11212'; break;

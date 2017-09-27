@@ -49,11 +49,11 @@ Game.prototype.makeMove = function(row, column) {
       this._playerTwoScore++
     }
   }
-  return cellValue;
+  return cellValue
 }
 
 Game.prototype.isPlayerOneTurn = function() {
-  return this._playerOneTurn;
+  return this._playerOneTurn
 }
 
 Game.prototype.showBoard = function() {
@@ -62,8 +62,19 @@ Game.prototype.showBoard = function() {
 
 Game.prototype.hasGameEnded = function() {
   let flagsToWin = Misc.div(this._flagsInMap,2)+1;
-  return (this._playerOneScore >= flagsToWin || this._playerTwoScore >= flagsToWin);
+  return (this._playerOneScore >= flagsToWin || this._playerTwoScore >= flagsToWin)
 }
 
+Game.prototype.getPlayerOneScore = function() {
+  return this._playerOneScore
+}
+
+Game.prototype.getPlayerTwoScore = function() {
+  return this._playerTwoScore
+}
+
+Game.prototype.getFlagsLeft = function() {
+  return this._flagsInMap - this.getPlayerOneScore() + this.getPlayerTwoScore()
+}
 
 module.exports = Game;
