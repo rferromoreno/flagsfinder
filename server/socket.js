@@ -3,6 +3,7 @@ module.exports = (io) => {
   // Chatroom
   var numUsers = 0;
 
+  var usernames = {};
   var games = {};
 
   var Game = require('./modules/Game');
@@ -13,12 +14,33 @@ module.exports = (io) => {
 
   io.on('connection', function (socket) {
     console.log(socket.id);
+
+    usernames[socket.id] = socket.id;
+    // Emit the list of usernames
+    io.sockets.emit('user:list', usernames);
+
+    socket.on('user:changeName', function (username) {
+      usernames[socket.id] = username;
+      // User changed its name. Emit all usernames again (to all)
+      io.sockets.emit('user:list', usernames);
+    });
+
+    // Game logic. TODO: Refactor and remove this code from here :)
     if (numUsers === 0) {
       playerOne = socket.id;
     } else if (numUsers === 1) {
       playerTwo = socket.id;
     }
     numUsers++;
+
+    socket.on('chat:message', function(msg) {
+      let newMsg = {
+        username: usernames[socket.id],
+        message: msg,
+        date: Date.now()
+      }
+      io.sockets.emit('chat:message', newMsg);
+    })
 
     // Initial message, so both know that it is Player One's turn.
     socket.emit('message', {
@@ -85,13 +107,9 @@ module.exports = (io) => {
 
     // when the user disconnects.. perform this
     socket.on('disconnect', function () {
-      numUsers--;
-
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers
-      });
+      delete usernames[socket.id];
+      // User left. Send username list to all
+      io.sockets.emit('user:list', usernames);
     });
   });
 }
