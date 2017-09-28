@@ -38,7 +38,6 @@ Game.prototype._shuffle = function() {
 }
 
 Game.prototype.makeMove = function(row, column) {
-  // TODO: Implement...
   let cellValue = this._board.getCell(row, column);
   if (cellValue !== 'F') {  // flag not found, change turn
     this._playerOneTurn = !this._playerOneTurn; 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Comment } from 'semantic-ui-react';
 
-export default class Message extends Component {
+class MessageItem extends Component {
   render() {
     let date = new Date(this.props.date).toTimeString();
     return  (
@@ -17,3 +17,5 @@ export default class Message extends Component {
       )
   }
 }
+
+export default MessageItem;

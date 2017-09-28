@@ -1,3 +1,5 @@
+var Room = require('./modules/Room');
+
 module.exports = (io) => {
 
   // Chatroom
@@ -5,12 +7,6 @@ module.exports = (io) => {
 
   var usernames = {};
   var games = {};
-
-  var Game = require('./modules/Game');
-  var gameMatch = new Game(11, 9);
-  gameMatch._shuffle();
-
-  let playerOne, playerTwo;
 
   io.on('connection', function (socket) {
     console.log(socket.id);
@@ -24,14 +20,6 @@ module.exports = (io) => {
       // User changed its name. Emit all usernames again (to all)
       io.sockets.emit('user:list', usernames);
     });
-
-    // Game logic. TODO: Refactor and remove this code from here :)
-    if (numUsers === 0) {
-      playerOne = socket.id;
-    } else if (numUsers === 1) {
-      playerTwo = socket.id;
-    }
-    numUsers++;
 
     socket.on('chat:message', function(msg) {
       let newMsg = {
@@ -56,11 +44,8 @@ module.exports = (io) => {
       }
 
       socket.join(room); 
-      games[room].match = new Game(11,9);
-      games[room].players = 1;
-
-      // setPlayerOne(socket.id)
-
+      games[room] = new Room(socket.id);
+      // Do something to notify player one that game was created.
     });
 
     socket.on('game:join', function (room) {
@@ -68,31 +53,19 @@ module.exports = (io) => {
         return ;  // room doesn't exist anymore
       } 
 
-      if (games[room].players >= 2) {
-        return ;  // room full
+      if (games[room].isFull()) {
+        return ;  // room full, can't join!
       }
 
-      socket.join(room)
-      games[room].players++;
-
-      // setPlayerTwo(socket.id)
-      
-      // game start
+      games[room].setPlayerTwo(socket.id);
+      socket.join(room);
+      // Do something to notify users that game starts
     })
 
     // when the client emits 'new message', this listens and executes
     socket.on('message', function (data) {
-      let value = gameMatch.makeMove(data.row, data.column);
-      let msg = {
-        row: data.row,
-        column: data.column,
-        value: value,
-        playerOneScore: gameMatch.getPlayerOneScore(),
-        playerTwoScore: gameMatch.getPlayerTwoScore(),
-        flagsLeft: gameMatch.getFlagsLeft(),
-        turn: gameMatch.isPlayerOneTurn() ? playerOne : playerTwo
-      }
-      io.sockets.emit('message', msg);
+      let movementStatus = games[room].makeMove(data.row, data.column);
+      io.sockets.emit('message', movementStatus);
     });
 
     // when the client emits 'new message', this listens and executes

@@ -25,8 +25,10 @@ class InputField extends Component {
     e.preventDefault();
     let { value } = this.state;
     let msg = value.trim();
-    this.props.socket.emit('chat:message', msg);
-    this.setState({value:''});
+    if (msg.length > 3) {
+      this.props.socket.emit('chat:message', msg);
+      this.setState({value:''});
+    }
   }
 
   handleKeyDown(e) {
