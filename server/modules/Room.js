@@ -43,7 +43,8 @@ Room.prototype.makeMove = function(row, column) {
     playerTwoScore: this._game.getPlayerTwoScore(),
     flagsLeft: this._game.getFlagsLeft(),
     turn: this._game.isPlayerOneTurn() ? playerOne : playerTwo,
-    ended: this._game.hasGameEnded()
+    ended: this._game.hasGameEnded(),
+    winner: this._game.hasGameEnded() ? this.whoseTurn() : null
   }
   return response;
 }

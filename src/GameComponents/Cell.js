@@ -20,8 +20,8 @@ class Cell extends Component {
       return ;  // nothing to do, button already clicked.
     
     this.setState({dirty: true}, () => {
-      let { row, column } = this.props;
-      this.props.socket.emit('message', { row, column });
+      let { row, column, room } = this.props;
+      this.props.socket.to(room).emit('message', { row, column });
     });
   }
 

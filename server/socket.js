@@ -2,23 +2,30 @@ var Room = require('./modules/Room');
 
 module.exports = (io) => {
 
-  // Chatroom
-  var numUsers = 0;
-
   var usernames = {};
   var games = {};
+  var roomIds = [];
 
+  var sendInformation = function() {
+    console.log("Emitting...");
+    io.sockets.emit('information', {
+      usernames: usernames,
+      rooms: roomIds
+    });
+  }
+
+  // All the socket logic!
   io.on('connection', function (socket) {
     console.log(socket.id);
 
     usernames[socket.id] = socket.id;
     // Emit the list of usernames
-    io.sockets.emit('user:list', usernames);
+    sendInformation();
 
     socket.on('user:changeName', function (username) {
       usernames[socket.id] = username;
       // User changed its name. Emit all usernames again (to all)
-      io.sockets.emit('user:list', usernames);
+      sendInformation();
     });
 
     socket.on('chat:message', function(msg) {
@@ -30,14 +37,6 @@ module.exports = (io) => {
       io.sockets.emit('chat:message', newMsg);
     })
 
-    // Initial message, so both know that it is Player One's turn.
-    socket.emit('message', {
-      row: 0,
-      column: 0,
-      value: '',
-      turn: playerOne
-    });
-
     socket.on('game:create', function (room) {
       if (room in games) {
         return ;  // room name already exist
@@ -45,7 +44,9 @@ module.exports = (io) => {
 
       socket.join(room); 
       games[room] = new Room(socket.id);
+      roomIds.push(room);
       // Do something to notify player one that game was created.
+      io.to(room).emit('game:created:ok', {room});
     });
 
     socket.on('game:join', function (room) {
@@ -60,22 +61,23 @@ module.exports = (io) => {
       games[room].setPlayerTwo(socket.id);
       socket.join(room);
       // Do something to notify users that game starts
+
+      // TODO: Remove this. REFACTOR!
+      io.in(room).emit('message', {
+        row: 0,
+        column: 0,
+        value: '',
+        turn: games[room].whoseTurn()
+      });
+  
     })
 
     // when the client emits 'new message', this listens and executes
     socket.on('message', function (data) {
-      let movementStatus = games[room].makeMove(data.row, data.column);
-      io.sockets.emit('message', movementStatus);
-    });
-
-    // when the client emits 'new message', this listens and executes
-    socket.on('message2', function (data) {
-      console.log("Llego el mensaje " + data);
-      // we tell the client to execute 'new message'
-      socket.broadcast.emit('message2', {
-        username: socket.username,
-        message: data
-      });
+      if (data.room in games) { 
+        let movementStatus = games[data.room].makeMove(data.row, data.column);
+        io.in(data.room).emit('message', movementStatus);
+      }
     });
 
     // when the user disconnects.. perform this

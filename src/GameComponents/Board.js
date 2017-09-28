@@ -31,6 +31,7 @@ class Board extends Component {
                     column={column} 
                     value={this.state.cells[row][column]} 
                     turn={this.state.turn}
+                    room={this.props.room}
               />);
   }
 

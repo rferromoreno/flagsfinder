@@ -2,14 +2,28 @@ import React, { Component } from 'react';
 import './App.css';
 import Game from './GameComponents/Game';
 import Chat from './ChatComponents/Chat';
+import { socketConnect } from 'socket.io-react';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = { 
-      playing: false
+      playing: false,
+      room: null
     }
+    this.setGame=this.setGame.bind(this);
+    this.props.socket.on('game:created:ok', (payload) => {
+      console.log(payload);
+      this.setState({
+        playing: true,
+        room: payload.room    
+      });
+    });
+  }
+
+  setGame() {
+    this.props.socket.emit('game:create', this.props.socket.id);
   }
 
   render() {
@@ -17,12 +31,12 @@ class App extends Component {
       <div className="App">
       {
         this.state.playing ?
-         <Game/> :
-         <Chat/>
+         <Game room={this.state.room}/> :
+         <Chat setGame={this.setGame}/>
       }
       </div>
     );
   }
 }
 
-export default App;
+export default socketConnect(App);

@@ -16,14 +16,16 @@ class Chat extends Component {
       messages: [] 
     };
     this.props.socket.on('chat:message', (payload) => {
-      console.log(payload);
       let { messages } = this.state;
       messages.push(payload);
       this.setState({messages}); 
     })
-    this.props.socket.on('user:list', (payload) => {
+    this.props.socket.on('information', (payload) => {
       console.log(payload);
-      this.setState({users: payload});
+      this.setState({
+        users: payload.usernames,
+        rooms: payload.rooms        
+      });
     });
   }
 
@@ -31,7 +33,7 @@ class Chat extends Component {
     return (
       <div style={{height: '100%'}}>
         <Grid columns='equal' style={{height: '100%'}}>
-          <RoomsPanel/>
+          <RoomsPanel rooms={this.state.rooms} setGame={this.props.setGame}/>
           <MessagesPanel messages={this.state.messages}/>
           <UsersPanel users={this.state.users}/>      
         </Grid>

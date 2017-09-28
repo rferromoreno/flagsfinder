@@ -5,7 +5,7 @@ class Game extends Component {
 
   render() {
     return (
-      <Board/>
+      <Board room={this.props.room} />
     )
   }
 }
