@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
-import { Grid, Segment, Header, Button } from 'semantic-ui-react';
+import { Grid, Segment, Header, Button, List } from 'semantic-ui-react';
+import { socketConnect } from 'socket.io-react';
 
 class RoomsPanel extends Component {
 
   constructor(props) {
     super(props);
     this.handleButton=this.handleButton.bind(this);
+    this.handleJoinRoom=this.handleJoinRoom.bind(this);
   }
 
   handleButton(e) {
     e.preventDefault()
     this.props.setGame();
+  }
+
+  handleJoinRoom(room) {
+    this.props.socket.emit('game:join', room);
   }
 
   render() {
@@ -19,9 +25,19 @@ class RoomsPanel extends Component {
       <Grid.Column>
         <Segment>
           <Header as='h2'>Rooms</Header>
-          {
-            rooms.map((room, index) => (<div key={index}>{room}</div>))
-          }
+          <List selection verticalAlign='middle'>
+            {
+              rooms.map((room, index) => (
+                <List.Item key={index} onClick={() => this.handleJoinRoom(room)}>
+                  <List.Content>
+                    <List.Header>
+                      {room}
+                    </List.Header>
+                  </List.Content>
+                </List.Item>
+              ))
+            }
+          </List>
         </Segment>
         <Segment>
           <Button fluid color='blue' onClick={this.handleButton}>Create room</Button>
@@ -30,4 +46,4 @@ class RoomsPanel extends Component {
     );
   }
 }
-export default RoomsPanel;
+export default socketConnect(RoomsPanel);

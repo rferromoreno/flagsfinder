@@ -7,7 +7,6 @@ module.exports = (io) => {
   var roomIds = [];
 
   var sendInformation = function() {
-    console.log("Emitting...");
     io.sockets.emit('information', {
       usernames: usernames,
       rooms: roomIds
@@ -16,8 +15,7 @@ module.exports = (io) => {
 
   // All the socket logic!
   io.on('connection', function (socket) {
-    console.log(socket.id);
-
+    console.log(socket.id+" connected");
     usernames[socket.id] = socket.id;
     // Emit the list of usernames
     sendInformation();
@@ -47,21 +45,23 @@ module.exports = (io) => {
       roomIds.push(room);
       // Do something to notify player one that game was created.
       io.to(room).emit('game:created:ok', {room});
+      // Notify all users about new room.
+      sendInformation();
     });
 
     socket.on('game:join', function (room) {
-      if (!(room in games)) {
+      if (!(room in games)) 
         return ;  // room doesn't exist anymore
-      } 
 
-      if (games[room].isFull()) {
+      if (games[room].isFull()) 
         return ;  // room full, can't join!
-      }
 
       games[room].setPlayerTwo(socket.id);
       socket.join(room);
-      // Do something to notify users that game starts
+      // I should tell the user that he joined successfully
+      io.to(socket.id).emit('game:created:ok', {room});
 
+      // Do something to notify users that game starts
       // TODO: Remove this. REFACTOR!
       io.in(room).emit('message', {
         row: 0,
@@ -83,8 +83,16 @@ module.exports = (io) => {
     // when the user disconnects.. perform this
     socket.on('disconnect', function () {
       delete usernames[socket.id];
-      // User left. Send username list to all
-      io.sockets.emit('user:list', usernames);
+
+      let roomIndex = roomIds.indexOf(socket.id);
+      if (roomIndex > -1) { // room exists
+        // Here, I could broadcast a msg to users in a certain room,
+        // and ask them to leave the room.
+        delete games[socket.id];
+        roomIds = roomIds.splice(roomIndex, 1);
+      }
+      // Send usernames and rooms list to all
+      sendInformation();
     });
   });
 }

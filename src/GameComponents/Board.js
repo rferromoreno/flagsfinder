@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Cell from './Cell';
 import Status from './Status';
 import { socketConnect } from 'socket.io-react';
+import { Grid, Segment } from 'semantic-ui-react';
 
 class Board extends Component {
 
@@ -44,10 +45,14 @@ class Board extends Component {
     );
 
     return (
-      <div>
-        <Status turn={this.state.turn} />
-        { cellsArray }
-      </div>
+      <Grid.Row>
+        <Segment>
+          <Status turn={this.state.turn} />
+        </Segment>
+        <Segment>
+          { cellsArray }
+        </Segment>
+      </Grid.Row>
     )
   }
 }

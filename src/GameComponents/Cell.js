@@ -21,7 +21,7 @@ class Cell extends Component {
     
     this.setState({dirty: true}, () => {
       let { row, column, room } = this.props;
-      this.props.socket.to(room).emit('message', { row, column });
+      this.props.socket.emit('message', { row, column, room });
     });
   }
 

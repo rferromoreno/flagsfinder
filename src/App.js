@@ -14,7 +14,6 @@ class App extends Component {
     }
     this.setGame=this.setGame.bind(this);
     this.props.socket.on('game:created:ok', (payload) => {
-      console.log(payload);
       this.setState({
         playing: true,
         room: payload.room    

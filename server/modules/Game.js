@@ -73,7 +73,7 @@ Game.prototype.getPlayerTwoScore = function() {
 }
 
 Game.prototype.getFlagsLeft = function() {
-  return this._flagsInMap - this.getPlayerOneScore() + this.getPlayerTwoScore()
+  return this._flagsInMap - (this.getPlayerOneScore() + this.getPlayerTwoScore())
 }
 
 module.exports = Game;
