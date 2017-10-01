@@ -49,6 +49,4 @@ Room.prototype.makeMove = function(row, column) {
   return response;
 }
 
-
-
 module.exports = Room;

@@ -5,56 +5,38 @@ import { socketConnect } from 'socket.io-react';
 import { Grid, Segment } from 'semantic-ui-react';
 
 class Board extends Component {
+	getCell = (row, column) => {
+		let { turn, room, cells, ended } = this.props;
+		return (
+			<Cell
+				key={column}
+				row={row}
+				column={column}
+				value={cells[row][column]}
+				turn={turn}
+				room={room}
+				ended={ended}
+			/>
+		);
+	};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      cells: Array(9).fill('').map(()=>Array(9).fill('')),
-      turn: false
-    };
-    this.props.socket.on('message', (payload) => {
-      console.log("Recibiendo mensaje "+JSON.stringify(payload));
-      this.updateCellInformation(payload);
-    })
-  }
+	render() {
+		let { cells, turn, ended } = this.props;
+		let cellsArray = cells.map((item, row) => (
+			<div key={row} className="board-row">
+				{item.map((subitem, column) => this.getCell(row, column))}
+			</div>
+		));
 
-  updateCellInformation = (payload) => {
-    let { row, column, value, turn } = payload;
-    let newState = this.state;
-    newState.cells[row][column] = value;
-    newState.turn = turn;
-    this.setState(newState);
-  }
-
-  getCell = (row, column) => {
-      return (<Cell key={column}
-                    row={row} 
-                    column={column} 
-                    value={this.state.cells[row][column]} 
-                    turn={this.state.turn}
-                    room={this.props.room}
-              />);
-  }
-
-  render() {
-    let cellsArray = this.state.cells.map((item, row) => (
-        <div key={row} className="board-row">
-          {item.map((subitem, column) => this.getCell(row, column))}
-        </div>
-      )
-    );
-
-    return (
-      <Grid.Row>
-        <Segment>
-          <Status turn={this.state.turn} />
-        </Segment>
-        <Segment>
-          { cellsArray }
-        </Segment>
-      </Grid.Row>
-    )
-  }
+		return (
+			<Grid.Row stretched>
+				<Segment>
+					<Status turn={turn} ended={ended} />
+				</Segment>
+				<Segment textAlign='center'>{cellsArray}</Segment>
+			</Grid.Row>
+		);
+	}
 }
 
 export default socketConnect(Board);

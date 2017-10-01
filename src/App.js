@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import 'semantic-ui-css/semantic.min.css';
 import Game from './GameComponents/Game';
 import Chat from './ChatComponents/Chat';
 import { socketConnect } from 'socket.io-react';

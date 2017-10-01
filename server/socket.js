@@ -89,7 +89,7 @@ module.exports = (io) => {
         // Here, I could broadcast a msg to users in a certain room,
         // and ask them to leave the room.
         delete games[socket.id];
-        roomIds = roomIds.splice(roomIndex, 1);
+        roomIds.splice(roomIndex, 1);
       }
       // Send usernames and rooms list to all
       sendInformation();

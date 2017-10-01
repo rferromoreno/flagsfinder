@@ -23,7 +23,11 @@
   },
   "description": "Juego para IAW, simulando el buscaminas PvP del MSN.",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "^1.7.3",
+    "prettier-eslint": "^8.2.0",
+    "semantic-ui-css": "^2.2.12"
+  },
   "keywords": [
     "reactjs",
     "react",

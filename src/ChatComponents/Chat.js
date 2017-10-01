@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { socketConnect } from 'socket.io-react';
 import { Grid } from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
 import RoomsPanel from './RoomsPanel';
 import UsersPanel from './UsersPanel';
 import MessagesPanel from './MessagesPanel';
@@ -31,8 +30,8 @@ class Chat extends Component {
 
   render() {
     return (
-      <div style={{height: '100%'}}>
-        <Grid columns='equal' style={{height: '100%'}}>
+      <div>
+        <Grid columns='equal'>
           <RoomsPanel rooms={this.state.rooms} setGame={this.props.setGame}/>
           <MessagesPanel messages={this.state.messages}/>
           <UsersPanel users={this.state.users}/>      
