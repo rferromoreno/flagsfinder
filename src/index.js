@@ -5,7 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { SocketProvider } from 'socket.io-react';
 import io from 'socket.io-client';
-import config from './config';
+//import config from './config';
 
 //const socket = io.connect(config.SOCKET_URL);
 const socket = io.connect();
