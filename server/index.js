@@ -7,13 +7,6 @@ var io = require('socket.io')(server);
 var socket = require('./socket');
 var port = process.env.PORT || 3000;
 
-// Setup for Heroku
-// Heroku setting for long polling
-io.configure(function () { 
-  io.set('transports', ['xhr-polling']);
-io.set('polling duration', 10);
-});
-
 // Routing
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.resolve(__dirname, '../build')));
