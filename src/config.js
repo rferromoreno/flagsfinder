@@ -1,3 +1,3 @@
 export default {
-  SOCKET_URL: "http://flagsfinder.herokuapp.com"
+  SOCKET_URL: "https://flagsfinder.herokuapp.com"
 }
