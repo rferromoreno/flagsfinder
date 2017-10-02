@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import config from './config';
 
 //const socket = io.connect(config.SOCKET_URL);
-const socket = io();
+const socket = io.connect();
 socket.on('message', msg => console.log(msg));
 
 ReactDOM.render(
