@@ -11,14 +11,8 @@ class Chat extends Component {
     super(props);
     this.state = { 
       rooms: [],
-      users: {},
-      messages: [] 
+      users: {}
     };
-    this.props.socket.on('chat:message', (payload) => {
-      let { messages } = this.state;
-      messages.push(payload);
-      this.setState({messages}); 
-    })
     this.props.socket.on('information', (payload) => {
       console.log(payload);
       this.setState({
@@ -33,7 +27,7 @@ class Chat extends Component {
       <div>
         <Grid columns='equal'>
           <RoomsPanel rooms={this.state.rooms} setGame={this.props.setGame}/>
-          <MessagesPanel messages={this.state.messages}/>
+          <MessagesPanel width={8}/>
           <UsersPanel users={this.state.users}/>      
         </Grid>
       </div>

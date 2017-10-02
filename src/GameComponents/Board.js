@@ -29,7 +29,7 @@ class Board extends Component {
 		));
 
 		return (
-			<Grid.Row stretched>
+			<Grid.Row>
 				<Segment>
 					<Status turn={turn} ended={ended} />
 				</Segment>

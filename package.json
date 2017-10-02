@@ -8,25 +8,27 @@
     "path": "^0.12.7",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-game-kit": "0.0.2",
     "react-scripts": "1.0.13",
     "semantic-ui-react": "^0.73.1",
+    "semantic-ui-css": "^2.2.12",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
     "socket.io-react": "^1.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "node server",
+    "test": "react-scripts start",
+    "heroku-postbuild": "npm run build",
+    "build": "react-scripts build"
   },
+  "cacheDirectories": [
+    "node_modules"
+  ],
   "description": "Juego para IAW, simulando el buscaminas PvP del MSN.",
   "main": "index.js",
   "devDependencies": {
     "prettier": "^1.7.3",
-    "prettier-eslint": "^8.2.0",
-    "semantic-ui-css": "^2.2.12"
+    "prettier-eslint": "^8.2.0"
   },
   "keywords": [
     "reactjs",
@@ -34,7 +36,10 @@
     "game",
     "socket.io",
     "websockets",
-    "nodejs"
+    "nodejs",
+    "node",
+    "javascript",
+    "js"
   ],
   "author": "rferromoreno",
   "license": "MIT"
