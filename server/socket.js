@@ -58,6 +58,7 @@ module.exports = (io) => {
     /* Handle user leaving a channel (room) */
     socket.on('leave', function (room) {
       socket.leave(room);
+      sendInformation();
       /*
       if (room === 'global') {
         socket.leave(room);
