@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Segment, Header, Button, List } from 'semantic-ui-react';
 import { socketConnect } from 'socket.io-react';
+import { withRouter } from 'react-router-dom';
 
 class RoomsPanel extends Component {
 
@@ -16,7 +17,7 @@ class RoomsPanel extends Component {
   }
 
   handleJoinRoom(room) {
-    this.props.socket.emit('game:join', room);
+    this.props.history.push('/room/' + room);
   }
 
   render() {
@@ -46,4 +47,4 @@ class RoomsPanel extends Component {
     );
   }
 }
-export default socketConnect(RoomsPanel);
+export default withRouter(socketConnect(RoomsPanel));

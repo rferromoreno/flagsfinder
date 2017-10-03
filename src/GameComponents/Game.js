@@ -4,11 +4,14 @@ import Scores from './Scores';
 import { Grid } from 'semantic-ui-react';
 import { socketConnect } from 'socket.io-react';
 import MessagesPanel from '../ChatComponents/MessagesPanel';
+import { withRouter } from 'react-router-dom';
 
 class Game extends Component {
 	constructor(props) {
-		super(props);
+    super(props);
+    console.log(props);
 		this.state = {
+      room: this.props.match.params.id,
 			cells: Array(9)
 				.fill('')
 				.map(() => Array(9).fill('')),
@@ -21,8 +24,21 @@ class Game extends Component {
 		this.props.socket.on('message', payload => {
 			console.log('Recibiendo mensaje ' + JSON.stringify(payload));
 			this.updateCellInformation(payload);
-		});
-	}
+    });
+    this.props.socket.on('room:full', this.redirectToIndex);
+  }
+
+  redirectToIndex = () => {
+    this.props.history.push('/');
+  }
+  
+  componentWillMount() {
+    this.props.socket.emit('join', this.props.match.params.id);
+  }
+
+  componentWillUnmount() {
+    this.props.socket.emit('leave', this.props.match.params.id);
+  }
 
 	updateCellInformation = payload => {
 		let { row, column } = payload;
@@ -49,15 +65,15 @@ class Game extends Component {
 				<Grid.Column width={7}>
 					<Board
 						ended={this.state.ended}
-						room={this.props.room}
+						room={this.state.room}
 						turn={this.state.turn}
 						cells={this.state.cells}
 					/>
 				</Grid.Column>
-				<MessagesPanel width={6} />
+				<MessagesPanel width={6} room={this.state.room} />
 			</Grid>
 		);
 	}
 }
 
-export default socketConnect(Game);
+export default withRouter(socketConnect(Game));

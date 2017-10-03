@@ -18,6 +18,7 @@
     "socket.io-react": "^1.2.0"
   },
   "scripts": {
+    "prestart": "npm run build",
     "start": "node server",
     "test": "react-scripts start",
     "heroku-postbuild": "npm run build",

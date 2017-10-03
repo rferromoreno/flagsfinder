@@ -20,18 +20,19 @@ class Chat extends Component {
 				rooms: payload.rooms
 			});
 		});
-		this.props.socket.on('game:created:ok', payload => {
-			// Redirects to the recently created room.
-			this.props.history.push('/room/' + payload.room);
-		});
-	}
+    this.props.socket.on('game:created:ok', this.redirectToRoom);
+  }
+  
+  redirectToRoom = payload => {
+    this.props.history.push('/room/' + payload.room);
+  };
 
 	componentWillMount() {
-		// Join Global Chat room
+    this.props.socket.emit('join', 'global');
 	}
 
 	componentWillUnmount() {
-		// Leave Global Chat room
+    this.props.socket.emit('leave', 'global');
 	}
 
 	render() {
@@ -39,7 +40,7 @@ class Chat extends Component {
 			<div>
 				<Grid columns="equal">
 					<RoomsPanel rooms={this.state.rooms} />
-					<MessagesPanel width={8} />
+					<MessagesPanel width={8} room='global' />
 					<UsersPanel users={this.state.users} />
 				</Grid>
 			</div>

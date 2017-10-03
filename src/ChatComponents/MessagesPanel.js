@@ -32,7 +32,7 @@ class MessagesPanel extends Component {
 							<Message key={index} username={msg.username} message={msg.message} date={msg.date} />
 						))}
 					</Comment.Group>
-					<InputField />
+					<InputField room={this.props.room} />
 				</Segment>
 			</Grid.Column>
 		);

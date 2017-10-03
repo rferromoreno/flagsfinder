@@ -25,7 +25,10 @@ class InputField extends Component {
 		let { value } = this.state;
 		let msg = value.trim();
 		if (msg.length >= 2 && msg.length <= 100) {
-			this.props.socket.emit('chat:message', msg);
+			this.props.socket.emit('chat:message', {
+        message: msg,
+        room: this.props.room
+      });
 			this.setState({ value: '' });
 		}
 	}
