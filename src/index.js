@@ -1,20 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { SocketProvider } from 'socket.io-react';
 import io from 'socket.io-client';
-//import config from './config';
-
-//const socket = io.connect(config.SOCKET_URL);
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 const socket = io.connect();
 socket.on('message', msg => console.log(msg));
 
 ReactDOM.render(
-  <SocketProvider socket={socket}>
-    <App />
-  </SocketProvider>,
-  document.getElementById('root'));
+	<SocketProvider socket={socket}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</SocketProvider>,
+	document.getElementById('root')
+);
 
 registerServiceWorker();

@@ -12,7 +12,7 @@ class RoomsPanel extends Component {
 
   handleButton(e) {
     e.preventDefault()
-    this.props.setGame();
+    this.props.socket.emit('game:create', this.props.socket.id);
   }
 
   handleJoinRoom(room) {

@@ -12,7 +12,10 @@ class MessagesPanel extends Component {
 		};
 		this.props.socket.on('chat:message', payload => {
 			let { messages } = this.state;
-			messages.push(payload);
+			let messagesLength = messages.push(payload);
+			if (messagesLength > 5) {
+				messages.splice(0,messagesLength-5);
+			}
 			this.setState({ messages });
 		});
 	}
