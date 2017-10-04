@@ -18,7 +18,7 @@ module.exports = io => {
 		let roomIndex = roomIds.indexOf(roomId);
 		if (roomIndex > -1) {
 			// room exists
-			io.to(roomId).emit('message', {
+			io.to(roomId).emit('status', {
 				turn: null,
 				ended: true
 			});
@@ -123,7 +123,14 @@ module.exports = io => {
 		socket.on('disconnect', function() {
 			delete usernames[socket.id];
 			// Delete the room and inform everyone in the channel, if possible
-			deleteRoom(socket.id);
+			Object.keys(games).forEach(roomId => {
+				let room = games[roomId];
+				let playerOne = room.getPlayerOneId();
+				let playerTwo = room.getPlayerTwoId();
+				if (playerOne === socket.id || playerTwo === socket.id) {
+					deleteRoom(roomId);
+				}
+			});
 			// Update rooms and usernames information in global channel.
 			sendInformation();
 		});
