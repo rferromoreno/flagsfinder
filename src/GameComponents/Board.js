@@ -8,8 +8,16 @@ import { withRouter } from 'react-router-dom';
 class Board extends Component {
 	constructor(props) {
 		super(props);
+		this.state = ({
+			boardTilted: false
+		})
 		this.getCell = this.getCell.bind(this);
 		this.redirectToIndex = this.redirectToIndex.bind(this);
+		this.setBoardTilted = this.setBoardTilted.bind(this);
+	}
+
+	setBoardTilted = (status, callback) => {
+		this.setState({boardTilted: status}, () => {callback()});
 	}
 
 	getCell = (row, column) => {
@@ -23,6 +31,8 @@ class Board extends Component {
 				turn={turn}
 				room={room}
 				ended={ended}
+				boardTilted={this.state.boardTilted}
+				setBoardTilted={this.setBoardTilted}
 			/>
 		);
 	};

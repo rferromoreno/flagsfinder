@@ -12,16 +12,21 @@ class Cell extends Component {
 
 	handleClick(e) {
 		e.preventDefault();
+		// board tilted by multiclicking, please stahp
+		if (this.props.boardTilted) return;
+		// game ended, no moves permitted
+		if (this.props.ended) return;
+		// not your turn, sorry.
+		if (this.props.turn !== this.props.socket.id) return;
+		// nothing to do, button already clicked.
+		if (this.state.dirty) return;
 
-		if (this.props.ended) return; // game ended, no moves permitted
-
-		if (this.props.turn !== this.props.socket.id) return; // not your turn, sorry.
-
-		if (this.state.dirty) return; // nothing to do, button already clicked.
-
-		this.setState({ dirty: true }, () => {
-			let { row, column, room } = this.props;
-			this.props.socket.emit('message', { row, column, room });
+		this.props.setBoardTilted(true, () => {
+			this.setState({ dirty: true }, () => {
+				let { row, column, room } = this.props;
+				this.props.socket.emit('message', { row, column, room });
+				setTimeout(this.props.setBoardTilted(false, () => {}) , 2000)
+			});
 		});
 	}
 
