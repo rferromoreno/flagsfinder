@@ -1,32 +1,24 @@
 import React, { Component } from 'react';
-import { socketConnect } from 'socket.io-react';
 
 class Status extends Component {
- 
-  shouldComponentUpdate(nextProps, nextState) {
-    // Only re-render when the turn changed or game ended
-    return (nextProps.turn !== this.props.turn) || (nextProps.ended !== this.props.ended);
-  }
+	shouldComponentUpdate(nextProps, nextState) {
+		// Only re-render when the turn changed or game ended
+		return nextProps.turn !== this.props.turn || nextProps.ended !== this.props.ended;
+	}
 
-  render() {
-    if (this.props.ended) {
-      return (
-        <div>
-          Game ended
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          {
-            this.props.turn === this.props.socket.id ?
-              "Your turn" :
-              "Opponent's turn"
-          }
-        </div>
-      )
-    }
-  }
+	render() {
+		let message;
+		if (this.props.ended) {
+			message = 'Game ended';
+		} else if (this.props.turn === null) {
+			message = 'Waiting for an opponent';
+		} else if (this.props.turn === this.props.socketId) {
+			message = 'Your turn';
+		} else {
+			message = "Opponent's turn";
+		}
+		return <div>{message}</div>;
+	}
 }
 
-export default socketConnect(Status);
+export default Status;
