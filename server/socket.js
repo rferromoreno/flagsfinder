@@ -7,9 +7,16 @@ module.exports = io => {
 
 	/* Method used for sending information to users in chat */
 	var sendInformation = function() {
+		let notFullRooms = [];
+		Object.keys(games).forEach(roomId => {
+			if (!games[roomId].isFull()) {
+				notFullRooms.push(roomId);
+			}
+		});
+
 		io.to('global').emit('information', {
 			usernames: usernames,
-			rooms: roomIds
+			rooms: notFullRooms
 		});
 	};
 
@@ -54,21 +61,28 @@ module.exports = io => {
 					io.to(socket.id).emit('room:full');
 				} else {
 					let players = games[room].getNumberOfPlayers();
-					socket.join(room);
 					if (players === 0) {
 						// First player to join.
+						socket.join(room);
 						games[room].setPlayerOne(socket.id);
+						io.to(socket.id).emit('room:joined');
 						io.to(socket.id).emit('status', {
 							turn: null,
 							ended: false
 						});
-					} else {
+					} else if (players === 1) {
 						// Second player to join
+						socket.join(room);
 						games[room].setPlayerTwo(socket.id);
-						// Tell all the user that the game has started.
+						io.to(socket.id).emit('room:joined');
+						// Tell all the users that the game has started.
 						io.in(room).emit('status', {
 							turn: games[room].whoseTurn()
 						});
+						sendInformation();
+					} else {
+						// Room full. This shouldn't happen, but I don't trust in race conditions.
+						io.to(socket.id).emit('room:full');
 					}
 				}
 			}
@@ -79,7 +93,15 @@ module.exports = io => {
 			socket.leave(room);
 			if (room !== 'global') {
 				// If room is not global, user is quitting a game.
-				deleteRoom(room);
+				if (room in games) {
+					// Check if user quitting was actually playing the game.
+					let game = games[room];
+					let playerOne = game.getPlayerOneId();
+					let playerTwo = game.getPlayerTwoId();
+					if (socket.id === playerOne || socket.id === playerTwo) {
+						deleteRoom(room);
+					}
+				}
 			}
 			sendInformation();
 		});

@@ -11,6 +11,7 @@ class Game extends Component {
 		super(props);
 		this.state = {
 			room: this.props.match.params.id,
+			roomJoined: false,
 			cells: Array(9)
 				.fill('')
 				.map(() => Array(9).fill('')),
@@ -21,9 +22,14 @@ class Game extends Component {
 			ended: false
 		};
 		this.props.socket.on('message', this.updateCellInformation);
-		this.props.socket.on('status', this.updateStatusInformation)
+		this.props.socket.on('status', this.updateStatusInformation);
 		this.props.socket.on('room:full', this.redirectToIndex);
+		this.props.socket.on('room:joined', this.setRoomJoined);
 	}
+
+	setRoomJoined = () => {
+		this.setState({ roomJoined: true });
+	};
 
 	redirectToIndex = () => {
 		this.props.history.push('/');
@@ -40,40 +46,44 @@ class Game extends Component {
 	updateCellInformation = payload => {
 		let newState = this.state;
 		let { row, column, value } = payload;
-			newState.cells[row][column] = value;
-			newState.turn = payload.turn;
-			newState.playerOneScore = payload.playerOneScore;
-			newState.playerTwoScore = payload.playerTwoScore;
-			newState.flagsLeft = payload.flagsLeft;
-			newState.ended = payload.ended;
-			this.setState(newState);
+		newState.cells[row][column] = value;
+		newState.turn = payload.turn;
+		newState.playerOneScore = payload.playerOneScore;
+		newState.playerTwoScore = payload.playerTwoScore;
+		newState.flagsLeft = payload.flagsLeft;
+		newState.ended = payload.ended;
+		this.setState(newState);
 	};
 
 	updateStatusInformation = payload => {
-		this.setState({...payload});
-	}
+		this.setState({ ...payload });
+	};
 
 	render() {
-		return (
-			<Grid>
-				<Grid.Column width={3}>
-					<Scores
-						playerOneScore={this.state.playerOneScore}
-						playerTwoScore={this.state.playerTwoScore}
-						flagsLeft={this.state.flagsLeft}
-					/>
-				</Grid.Column>
-				<Grid.Column width={7}>
-					<Board
-						ended={this.state.ended}
-						room={this.state.room}
-						turn={this.state.turn}
-						cells={this.state.cells}
-					/>
-				</Grid.Column>
-				<MessagesPanel width={6} room={this.state.room} />
-			</Grid>
-		);
+		if (!this.state.roomJoined) {
+			return null;
+		} else {
+			return (
+				<Grid>
+					<Grid.Column width={3}>
+						<Scores
+							playerOneScore={this.state.playerOneScore}
+							playerTwoScore={this.state.playerTwoScore}
+							flagsLeft={this.state.flagsLeft}
+						/>
+					</Grid.Column>
+					<Grid.Column width={7}>
+						<Board
+							ended={this.state.ended}
+							room={this.state.room}
+							turn={this.state.turn}
+							cells={this.state.cells}
+						/>
+					</Grid.Column>
+					<MessagesPanel width={6} room={this.state.room} />
+				</Grid>
+			);
+		}
 	}
 }
 
