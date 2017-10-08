@@ -5,6 +5,7 @@ import Header from './shared/Header';
 import Footer from './shared/Footer';
 import ChatPage from './ChatComponents/Chat';
 import GamePage from './GameComponents/Game';
+import AboutPage from './Components/AboutPage';
 import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
@@ -17,6 +18,7 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/" component={ChatPage} />
 						<Route path="/room/:id" component={GamePage} />
+						<Route path="/about" component={AboutPage} />
 					</Switch>
 				</Container>
 				<Footer />
